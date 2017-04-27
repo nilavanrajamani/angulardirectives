@@ -2,20 +2,20 @@
 <html ng-app="app">
 
 <head>
-    <link data-require="bootstrap@*" data-semver="4.0.5" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+    <link data-require="bootstrap@*" data-semver="3.1.1" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"
     />
     <script data-require="jquery@*" data-semver="3.1.1" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script data-require="tether@*" data-semver="1.4.0" src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
     <script data-require="angular.js@1.6.2" data-semver="1.6.2" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.js"></script>
-    <script data-require="bootstrap@*" data-semver="4.0.5" src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"></script>
+    <script data-require="bootstrap@*" data-semver="3.1.1" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="style.css" />
     <script src="script.js"></script>
 </head>
 
 <body ng-controller="mainCtrl" style="padding-top: 30px">
     <div class="container">
-        <h1>Hello Plunker!!</h1>
-        <user-info-card></user-info-card>
+        <user-info-card user="user1" collapsed="true"></user-info-card>
+        <user-info-card user="user2"></user-info-card>
     </div>
 </body>
 
