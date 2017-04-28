@@ -78,7 +78,7 @@ angular.module('app').directive('removeFriend', function () {
       $scope.cancelRemove = function () {
         $scope.removing = false;
       };
-      $scope.confirmRemove = function(){
+      $scope.confirmRemove = function () {
         $scope.notifyParent();
       }
     }
@@ -100,8 +100,43 @@ angular.module('app').directive('address', function () {
       $scope.expandAddress = function () {
         $scope.collapsed = false;
       }
+      $scope.handlePause = function(){
+        console.log('video is paused!!');
+      }
     }
   }
+});
+
+angular.module('app').directive('eventPause', function(){
+  return{
+    restrict: 'A',
+    scope: {
+      eventPause : '&'
+    },
+    link: function(scope, element, attrs){
+      element[0].on('pause', function(event){
+        scope.eventPause();
+      });
+    }
+  }
+});
+
+angular.module('app').directive('spacebarSupport', function () {
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      $('body').on('keypress', function (evt) {
+        var vidEl = element[0];
+        if (evt.keyCode == 32) {
+          if (vidEl.paused) {
+            vidEl.play();
+          } else {
+            vidEl.pause();
+          }
+        }
+      });
+    }
+  };
 });
 
 
