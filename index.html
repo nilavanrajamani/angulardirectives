@@ -12,7 +12,7 @@
     <script src="script.js"></script>
 </head>
 
-<body ng-controller="mainCtrl" style="padding-top: 30px">
+<body ng-controller="mainCtrl" style="padding-top: 30px" my-click="clickHandler(data)">
     <div class="container">
         <user-info-card user="user1" collapsed="true"></user-info-card>
         <user-info-card user="user2"></user-info-card>
@@ -24,6 +24,15 @@
         </video>
         <br/>
         <div ng-repeat="message in messages">{{message.text}}</div>
+
+        <!--Recreating ngClick-->
+        <h2>{{data.message}}</h2>
+        <user-tile user="user1"></user-tile>
+
+        <!--Manually Creating watches-->
+        <div>Im not scaled</div>
+        <div font-scale="size">I'm some text</div>
+        <input ng-model="size"/>
     </div>
 </body>
 

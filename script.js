@@ -33,10 +33,78 @@ angular.module('app').controller('mainCtrl', function ($scope) {
 
     $scope.messages = [];
     $scope.handlePause = function () {
-        $scope.messages.push({text: 'paused!'});
+        $scope.messages.push({ text: 'paused!' });
         console.log('paused!');
     }
+
+    /*Recreating ngClick*/
+    $scope.data = { message: "I have not been clicked!" }
+
+    $scope.clickHandler = function (p) {
+        p.message = "I had been clicked!!";
+    };
+
+    /*Business specific directive*/
+    $scope.user1 = {
+        name : 'Luke',
+        selected: false
+    }
+
+    $scope.size = 150;
 });
+
+/*Recreating ngClick*/
+angular.module('app').directive('myClick', function($parse){
+    return{
+        restrict: 'A',
+        link: function(scope, element, attrs){
+            var fn = $parse(attrs['myClick']);
+            element.on('click', function(){
+                scope.$apply(function(){
+                    fn(scope);
+                });
+            });
+        }
+    }
+});
+/*Recreating ngClick*/
+
+/*Business specific directive*/
+angular.module('app').directive('userTile', function(){
+    return{
+        restrict: 'E',
+        scope:{
+            user: '='
+        },
+        templateUrl: 'userTile.html'
+    }
+});
+
+angular.module('app').directive('userClickSelect', function(){
+    return{
+        restrict: 'A',
+        link: function(scope, element, attrs){
+            element.on('click', function(){
+                scope.$apply(function(){
+                    scope.user.selected = !scope.user.selected;
+                });
+            });
+        }
+    }
+});
+/*Business specific directive*/
+
+/*Manually Creating watches*/
+angular.module('app').directive('fontScale', function(){
+    return{
+        link : function(scope, element, attrs){
+            scope.$watch(attrs['fontScale'], function(newValue, oldValue){
+                element.css('font-size', newValue + "%");
+            });
+        }
+    }
+});
+/*Manually Creating watches*/
 
 angular.module('app').directive('userInfoCard', function () {
     return {
