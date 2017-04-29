@@ -14,7 +14,8 @@ angular.module('app').controller('mainCtrl', function ($scope) {
             'Han',
             'Leia',
             'Chewbacca'
-        ]
+        ],
+        level: 0
     };
     $scope.user2 = {
         name: 'Nilavan',
@@ -27,7 +28,8 @@ angular.module('app').controller('mainCtrl', function ($scope) {
             '1',
             '2',
             '4'
-        ]
+        ],
+        level: 1
     }
     console.log($scope);
 
@@ -46,7 +48,7 @@ angular.module('app').controller('mainCtrl', function ($scope) {
 
     /*Business specific directive*/
     $scope.user1 = {
-        name : 'Luke',
+        name: 'Luke',
         selected: false
     }
 
@@ -54,13 +56,13 @@ angular.module('app').controller('mainCtrl', function ($scope) {
 });
 
 /*Recreating ngClick*/
-angular.module('app').directive('myClick', function($parse){
-    return{
+angular.module('app').directive('myClick', function ($parse) {
+    return {
         restrict: 'A',
-        link: function(scope, element, attrs){
+        link: function (scope, element, attrs) {
             var fn = $parse(attrs['myClick']);
-            element.on('click', function(){
-                scope.$apply(function(){
+            element.on('click', function () {
+                scope.$apply(function () {
                     fn(scope);
                 });
             });
@@ -70,22 +72,22 @@ angular.module('app').directive('myClick', function($parse){
 /*Recreating ngClick*/
 
 /*Business specific directive*/
-angular.module('app').directive('userTile', function(){
-    return{
+angular.module('app').directive('userTile', function () {
+    return {
         restrict: 'E',
-        scope:{
+        scope: {
             user: '='
         },
         templateUrl: 'userTile.html'
     }
 });
 
-angular.module('app').directive('userClickSelect', function(){
-    return{
+angular.module('app').directive('userClickSelect', function () {
+    return {
         restrict: 'A',
-        link: function(scope, element, attrs){
-            element.on('click', function(){
-                scope.$apply(function(){
+        link: function (scope, element, attrs) {
+            element.on('click', function () {
+                scope.$apply(function () {
                     scope.user.selected = !scope.user.selected;
                 });
             });
@@ -95,16 +97,32 @@ angular.module('app').directive('userClickSelect', function(){
 /*Business specific directive*/
 
 /*Manually Creating watches*/
-angular.module('app').directive('fontScale', function(){
-    return{
-        link : function(scope, element, attrs){
-            scope.$watch(attrs['fontScale'], function(newValue, oldValue){
+angular.module('app').directive('fontScale', function () {
+    return {
+        link: function (scope, element, attrs) {
+            scope.$watch(attrs['fontScale'], function (newValue, oldValue) {
                 element.css('font-size', newValue + "%");
             });
         }
     }
 });
 /*Manually Creating watches*/
+
+angular.module('app').directive('stateDisplay', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            var params = attrs['stateDisplay'].split(' ');
+            var classes = params.slice(1);
+            scope.$watch(params[0], function (newValue) {
+                console.log(newValue);
+                //element.css('background-color', params[newValue + 1]);
+                element.removeClass(classes.join(' '));
+                element.addClass(classes[newValue]);
+            });
+        }
+    }
+});
 
 angular.module('app').directive('userInfoCard', function () {
     return {
@@ -116,6 +134,11 @@ angular.module('app').directive('userInfoCard', function () {
         },
         controller: function ($scope) {
             //$scope.collapsed = false;
+            $scope.nextState = function () {
+                $scope.user.level++;
+                $scope.user.level = $scope.user.level % 4;
+            }
+
             $scope.collapsed = ($scope.initialCollapsed === 'true');
             $scope.knightMe = function (user) {
                 user.rank = "knight";
