@@ -3,7 +3,7 @@
 angular.module('app', []);
 
 angular.module('app').controller('mainCtrl', function ($scope) {
-    $scope.user1 = {
+    $scope.person1 = {
         name: 'Luke Skywalker',
         address: {
             street: 'PO Box 123',
@@ -17,7 +17,7 @@ angular.module('app').controller('mainCtrl', function ($scope) {
         ],
         level: 0
     };
-    $scope.user2 = {
+    $scope.person2 = {
         name: 'Nilavan',
         address: {
             street: 'Street Cheyyar',
@@ -57,6 +57,19 @@ angular.module('app').controller('mainCtrl', function ($scope) {
     /*Transclusion */
     $scope.message = 'Hello Transclusion';
     $scope.answers = { baseLocation: 'Miami' };
+
+
+    /*Reusing HTML with Transclusion */
+    $scope.droid1 = {
+        name: 'R4-D5',
+        specifications: {
+            manufacturer: 'Onida',
+            type: 'Walker',
+            productLine: 'R3'
+        },
+        level: 1
+    }
+
 });
 
 /*Recreating ngClick*/
@@ -128,35 +141,83 @@ angular.module('app').directive('stateDisplay', function () {
     }
 });
 
-angular.module('app').directive('userInfoCard', function () {
+angular.module('app').directive('personInfoCard', function () {
     return {
-        templateUrl: "userInfoCard.html",
+        templateUrl: "personInfoCard.html",
         restrict: "E",
         scope: {
-            user: '=',
+            person: '=',
             initialCollapsed: '@collapsed'
         },
         controller: function ($scope) {
             //$scope.collapsed = false;
+
+            $scope.knightMe = function (person) {
+                person.rank = "knight";
+            }
+
+            $scope.removeFriend = function (friend) {
+                var idx = $scope.person.friends.indexOf(friend);
+                if (idx > -1) {
+                    $scope.person.friends.splice(idx, 1);
+                }
+            };
+            console.log('personInfoCard scope');
+            console.log($scope);
+        }
+    }
+});
+
+
+angular.module('app').directive('droidInfoCard', function () {
+    return {
+        templateUrl: "droidInfoCard.html",
+        restrict: "E",
+        scope: {
+            droid: '=',
+            initialCollapsed: '@collapsed'
+        },
+        controller: function ($scope) {
+            //$scope.collapsed = false;
+            console.log('droidInfoCard scope');
+            console.log($scope);
+        }
+    }
+});
+
+angular.module('app').directive('userPanel', function () {
+    return {
+        templateUrl: "userPanel.html",
+        restrict: "E",
+        scope: {
+            name: "@",
+            level: "=",
+            initialCollapsed: '@collapsed'
+        },
+        transclude: true,
+        controller: function ($scope) {
+            //$scope.collapsed = false;
             $scope.nextState = function () {
-                $scope.user.level++;
-                $scope.user.level = $scope.user.level % 4;
+                $scope.droid.level++;
+                $scope.droid.level = $scope.droid.level % 4;
             }
 
             $scope.collapsed = ($scope.initialCollapsed === 'true');
-            $scope.knightMe = function (user) {
-                user.rank = "knight";
-            }
+
             $scope.collapse = function () {
                 $scope.collapsed = !$scope.collapsed;
             }
-            $scope.removeFriend = function (friend) {
-                var idx = $scope.user.friends.indexOf(friend);
-                if (idx > -1) {
-                    $scope.user.friends.splice(idx, 1);
-                }
-            };
-            console.log('userInfoCard scope');
+
+            $scope.nextState = function (evt) {
+                console.log('scope.nextState in userPanel', evt);
+                evt.stopPropogation();
+                evt.preventDefault();
+                $scope.level++;
+                $scope.level = $scope.level % 4;
+            }
+
+
+            console.log('userPanel scope');
             console.log($scope);
         }
     }
