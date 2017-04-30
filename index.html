@@ -32,7 +32,31 @@
         <!--Manually Creating watches-->
         <div>Im not scaled</div>
         <div font-scale="size">I'm some text</div>
-        <input ng-model="size"/>
+        <input ng-model="size" />
+
+        <!--Transclusion-->
+        <display-box>
+            <div ng-controller="innerCtrl">
+                <div>This is content inside</div>
+                <ul>
+                    <li>Item1</li>
+                    <li>Item2</li>
+                </ul>
+                <div>
+                    {{message}}
+                </div>
+            </div>
+        </display-box>
+
+        <!-- Questionnarie directive -->
+        <h1>Questions</h1>        
+        <my-question q="Where is the rebel base?">
+            <input type="text" ng-model="answers.baseLocation" />
+        </my-question>
+        <my-question q="Are you my brother?">
+            <input type="radio" ng-value="true" ng-model="answers.brother"/> Yes
+            <input type="radio" ng-value="false" ng-model="answers.brother"/> No
+        </my-question>
     </div>
 </body>
 

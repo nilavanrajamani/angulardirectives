@@ -31,7 +31,7 @@ angular.module('app').controller('mainCtrl', function ($scope) {
         ],
         level: 1
     }
-    console.log($scope);
+    console.log("Main controller scope ", $scope);
 
     $scope.messages = [];
     $scope.handlePause = function () {
@@ -53,6 +53,10 @@ angular.module('app').controller('mainCtrl', function ($scope) {
     }
 
     $scope.size = 150;
+
+    /*Transclusion */
+    $scope.message = 'Hello Transclusion';
+    $scope.answers = { baseLocation: 'Miami' };
 });
 
 /*Recreating ngClick*/
@@ -233,7 +237,39 @@ angular.module('app').directive('spacebarSupport', function () {
     };
 });
 
+// Transclusion
+angular.module('app').directive('displayBox', function () {
+    return {
+        restrict: 'E',
+        templateUrl: 'displayBox.html',
+        controller: function ($scope) {
+            $scope.hidden = false;
+            $scope.close = function () {
+                $scope.hidden = true;
+            };
+            console.log('Directive Scope ', $scope);
+            $scope.message = 'Hi from directive scope message'
+        },
+        transclude: true,
+        scope: true
+    }
+});
 
+angular.module('app').controller('innerCtrl', function ($scope) {
+    console.log('Transcluded Items scope ', $scope);
+});
+
+/*Questionnaire directive */
+angular.module('app').directive('myQuestion', function () {
+    return {
+        restrict: 'E',
+        transclude: true,
+        templateUrl: 'myQuestion.html',
+        scope: {
+            questionText: '@q'
+        }
+    }
+});
 
 
 
