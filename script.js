@@ -70,6 +70,19 @@ angular.module('app').controller('mainCtrl', function ($scope) {
         level: 1
     }
 
+    /*Advanced Transclusion */
+    $scope.items = [1, 3, 5, 7];
+
+    /*Recreating ng-repeat */
+    $scope.bountyHunters = [{ name: 'Nilavan' }, { name: 'Surya' }, { name: 'Thamarai' }];
+
+    $scope.add = function () {
+        $scope.bountyHunters.push({ name: 'Sakthi' });
+    };
+
+    $scope.remove = function () {
+        $scope.bountyHunters.length--;
+    };
 });
 
 /*Recreating ngClick*/
@@ -328,6 +341,73 @@ angular.module('app').directive('myQuestion', function () {
         templateUrl: 'myQuestion.html',
         scope: {
             questionText: '@q'
+        }
+    }
+});
+
+angular.module('app').directive('myTransclude', function () {
+    return {
+        restrict: 'A',
+        //transclude: true,
+        transclude: 'element',
+        link: function (scope, element, attrs, ctrl, transclude) {
+            transclude(scope, function (clone) {
+                element.after(clone);
+            });
+        }
+    }
+});
+
+angular.module('app').directive('myLazyRender', function () {
+    return {
+        restrict: 'A',
+        transclude: 'element',
+        priority: 1200,
+        link: function (scope, element, attrs, ctrl, transclude) {
+            var unwatchit = scope.$watch(attrs.myLazyRender, function (value) {
+                if (value) {
+                    transclude(scope, function (clone) {
+                        element.after(clone);
+                    });
+                    unwatchit();
+                }
+            });
+        }
+    }
+});
+
+angular.module('app').directive('myRepeat', function () {
+    return {
+        restrict: 'A',
+        transclude: 'element',
+        link: function (scope, element, attrs, ctrl, transclude) {
+            var pieces = attrs.myRepeat.split(' ');
+            var itemString = pieces[0];
+            var collectionName = pieces[2];
+            var elements = [];
+
+            scope.$watchCollection(collectionName, function (collection) {
+
+                if (elements.length > 0) {
+                    for (var i = 0; i < elements.length; i++) {
+                        elements[i].el.remove();
+                        elements[i].scope.$destroy();
+                    }
+                    elements = [];
+                }
+
+                for (var i = 0; i < collection.length; i++) {
+                    var childScope = scope.$new();
+                    childScope[itemString] = collection[i];
+                    transclude(childScope, function (clone) {
+                        element.before(clone);
+                        var item = {};
+                        item.el = clone;
+                        item.scope = childScope;
+                        elements.push(item);
+                    });
+                }
+            });
         }
     }
 });

@@ -58,7 +58,31 @@
             <input type="radio" ng-value="true" ng-model="answers.brother"/> Yes
             <input type="radio" ng-value="false" ng-model="answers.brother"/> No
         </my-question>
-    </div>
+
+        <!--Advanced Transclusion-->
+        <div my-transclude>
+            <div ng-repeat="item in items">
+                {{item}}
+            </div>
+        </div>
+
+        <!--Lazy load directive-->
+        <div my-lazy-render="showit">
+            <div ng-repeat="item in items">
+                {{item}}
+            </div>
+        </div>
+
+        <button class="btn btn-primary" ng-click="showit = true">Render Content</button>
+
+        <h1 class="well">Bounty Hunters</h1>
+        <div my-repeat="hunter in bountyHunters">
+            <span>Name: {{hunter.name}}</span>
+        </div>
+        <hr>
+        <button class="btn btn-primary" ng-click="add()">Add</button>
+        <button class="btn btn-primary" ng-click="remove()">Remove</button>
+    </div>    
 </body>
 
 </html>
