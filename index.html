@@ -76,8 +76,8 @@
         <button class="btn btn-primary" ng-click="showit = true">Render Content</button>
 
         <h1 class="well">Bounty Hunters</h1>
-        <div my-repeat="hunter in bountyHunters">
-            <span>Name: {{hunter.name}}</span>
+        <div user-list="hunter in bountyHunters">
+            <span>Age: {{hunter.age}}</span>
         </div>
         <hr>
         <button class="btn btn-primary" ng-click="add()">Add</button>

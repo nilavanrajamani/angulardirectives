@@ -74,10 +74,10 @@ angular.module('app').controller('mainCtrl', function ($scope) {
     $scope.items = [1, 3, 5, 7];
 
     /*Recreating ng-repeat */
-    $scope.bountyHunters = [{ name: 'Nilavan' }, { name: 'Surya' }, { name: 'Thamarai' }];
+    $scope.bountyHunters = [{ name: 'Nilavan', age: 45 }, { name: 'Surya', age: 50 }, { name: 'Thamarai', age: 23 }];
 
     $scope.add = function () {
-        $scope.bountyHunters.push({ name: 'Sakthi' });
+        $scope.bountyHunters.push({ name: 'Sakthi', age: 19 });
     };
 
     $scope.remove = function () {
@@ -198,6 +198,31 @@ angular.module('app').directive('droidInfoCard', function () {
     }
 });
 
+function userInfoCardCtrl($scope) {
+    $scope.nextState = function () {
+        $scope.droid.level++;
+        $scope.droid.level = $scope.droid.level % 4;
+    }
+
+    $scope.collapsed = ($scope.initialCollapsed === 'true');
+
+    $scope.collapse = function () {
+        $scope.collapsed = !$scope.collapsed;
+    }
+
+    $scope.nextState = function (evt) {
+        console.log('scope.nextState in userPanel', evt);
+        evt.stopPropogation();
+        evt.preventDefault();
+        $scope.level++;
+        $scope.level = $scope.level % 4;
+    }
+
+
+    console.log('userPanel scope');
+    console.log($scope);
+}
+
 angular.module('app').directive('userPanel', function () {
     return {
         templateUrl: "userPanel.html",
@@ -208,31 +233,7 @@ angular.module('app').directive('userPanel', function () {
             initialCollapsed: '@collapsed'
         },
         transclude: true,
-        controller: function ($scope) {
-            //$scope.collapsed = false;
-            $scope.nextState = function () {
-                $scope.droid.level++;
-                $scope.droid.level = $scope.droid.level % 4;
-            }
-
-            $scope.collapsed = ($scope.initialCollapsed === 'true');
-
-            $scope.collapse = function () {
-                $scope.collapsed = !$scope.collapsed;
-            }
-
-            $scope.nextState = function (evt) {
-                console.log('scope.nextState in userPanel', evt);
-                evt.stopPropogation();
-                evt.preventDefault();
-                $scope.level++;
-                $scope.level = $scope.level % 4;
-            }
-
-
-            console.log('userPanel scope');
-            console.log($scope);
-        }
+        controller: userInfoCardCtrl
     }
 });
 
@@ -376,12 +377,12 @@ angular.module('app').directive('myLazyRender', function () {
     }
 });
 
-angular.module('app').directive('myRepeat', function () {
+angular.module('app').directive('userList', function ($compile) {
     return {
         restrict: 'A',
         transclude: 'element',
         link: function (scope, element, attrs, ctrl, transclude) {
-            var pieces = attrs.myRepeat.split(' ');
+            var pieces = attrs.userList.split(' ');
             var itemString = pieces[0];
             var collectionName = pieces[2];
             var elements = [];
@@ -400,9 +401,15 @@ angular.module('app').directive('myRepeat', function () {
                     var childScope = scope.$new();
                     childScope[itemString] = collection[i];
                     transclude(childScope, function (clone) {
-                        element.before(clone);
+                        //var wrapper = angular.element('<div class="well"></div>');
+                        var template = $compile('<div class="panel panel-primary"><div class="panel-heading">{{' + itemString + '.name}}</div><div class="panel-body"></div>"');
+                        var wrapper = template(childScope);
+                        console.log("cloned element", clone);
+                        wrapper.find(".panel-body").append(clone);
+                        element.before(wrapper);
+
                         var item = {};
-                        item.el = clone;
+                        item.el = wrapper;
                         item.scope = childScope;
                         elements.push(item);
                     });
