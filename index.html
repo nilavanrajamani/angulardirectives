@@ -50,13 +50,13 @@
         </display-box>
 
         <!-- Questionnarie directive -->
-        <h1>Questions</h1>        
+        <h1>Questions</h1>
         <my-question q="Where is the rebel base?">
             <input type="text" ng-model="answers.baseLocation" />
         </my-question>
         <my-question q="Are you my brother?">
-            <input type="radio" ng-value="true" ng-model="answers.brother"/> Yes
-            <input type="radio" ng-value="false" ng-model="answers.brother"/> No
+            <input type="radio" ng-value="true" ng-model="answers.brother" /> Yes
+            <input type="radio" ng-value="false" ng-model="answers.brother" /> No
         </my-question>
 
         <!--Advanced Transclusion-->
@@ -82,7 +82,28 @@
         <hr>
         <button class="btn btn-primary" ng-click="add()">Add</button>
         <button class="btn btn-primary" ng-click="remove()">Remove</button>
-    </div>    
+
+        <!-- PreLink and PostLink functions -->
+        <h1>Master and Apprentice</h1>
+        <emperor>
+            <vader>
+                <starkiller></starkiller>
+            </vader>
+        </emperor>
+
+        <!-- Panel directives -->
+        <sw-tabstrip>
+            <sw-pane title="Bounty Hunters">
+                <h4>We dont need that scum</h4>
+            </sw-pane>
+            <sw-pane title="Death Star">
+                <h4>Thats no moon...</h4>
+            </sw-pane>
+            <sw-pane title="Love you">
+                <h4>I know</h4>
+            </sw-pane>
+        </sw-tabstrip>
+    </div>
 </body>
 
 </html>

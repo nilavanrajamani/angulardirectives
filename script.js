@@ -420,8 +420,100 @@ angular.module('app').directive('userList', function ($compile) {
 });
 
 
+/*PreLink and PostLink functions*/
+angular.module('app').directive('emperor', function () {
+    var name = 'The Emperor';
+    return {
+        restrict: 'E',
+        scope: true,
+        controller: function($scope){
+            this.name = name;
+        },
+        link: {
+            post: function (scope, element, attrs) {
+                element.data('name', 'The Emperor');
+                scope.master = 'The Emperor';
+            }
+        }
+    }
+});
+
+angular.module('app').directive('vader', function () {
+    var name = 'The Vader';
+    return {
+        restrict: 'E',
+        scope: true,
+        require: '^emperor',
+        controller: function($scope){
+            this.name = name;
+        },
+        link: {
+            post: function (scope, element, attrs, emperorCtrlr) {
+                element.data('name', 'Vader');
+                console.log('Master', scope.master);
+                console.log('Value from emperor controller', emperorCtrlr.name)
+            }
+        }
+    }
+});
+
+angular.module('app').directive('starkiller', function () {
+    return {
+        restrict: 'E',
+        scope: true,
+        require: ['^vader','^emperor'],
+        link: {
+            post: function (scope, element, attrs, controllers) {
+                console.log(controllers[0].name);
+                console.log(controllers[1].name);
+                element.data('name', 'Starkiller');
+                console.log('Master', scope.master);
+            }
+        }
+    }
+});
 
 
+angular.module('app').directive('swTabstrip', function(){
+    return{
+        restrict: 'E',
+        transclude: true,
+        templateUrl: 'swTabstrip.html',
+        controller: function($scope){
+            $scope.panes = [];
+            $scope.select = function(pane){
+                pane.selected = true;
+                $scope.panes.forEach(function(curPane){
+                    if(curPane != pane){
+                        curPane.selected = false;
+                    }
+                });
+            }
+
+            this.addPane = function(pane){
+                $scope.panes.push(pane);
+                if($scope.panes.length === 1){
+                    pane.selected = true;
+                }
+            }
+        }
+    }
+});
+
+angular.module('app').directive('swPane', function(){
+    return{
+        restrict: 'E',
+        transclude: true,
+        scope:{
+            title:"@"
+        },
+        require: '^swTabstrip',
+        link: function(scope, element, attrs, tabstripCtrl){
+            tabstripCtrl.addPane(scope);
+        },
+        templateUrl: 'swPane.html'
+    }
+});
 
 
 
